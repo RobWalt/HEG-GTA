@@ -1,7 +1,11 @@
-{ pkgs, system, fenix, ... }:
-pkgs.mkShell rec {
+{ pkgs, system, inputs, ... }:
+let
+  nannou-new = import ./nannou-new.nix { inherit pkgs; };
+in
+pkgs.mkShell
+rec {
   buildInputs = [
-    (with fenix.packages.${system};  combine [
+    (with inputs.fenix.packages.${system};  combine [
       stable.cargo
       stable.rustc
       stable.rust-src
@@ -9,5 +13,6 @@ pkgs.mkShell rec {
       stable.clippy
       complete.rustfmt
     ])
+    nannou-new
   ];
 }

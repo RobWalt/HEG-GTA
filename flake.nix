@@ -17,7 +17,7 @@
     {
       devShells = rec {
         default = nannou;
-        nannou = import nannou.nix { inherit inputs; };
+        nannou = import ./nannou.nix { inherit pkgs system inputs; };
       };
     }
   );
