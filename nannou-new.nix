@@ -1,5 +1,7 @@
 { pkgs, ... }:
-pkgs.rustPlatform.buildRustPackage rec {
+pkgs.rustPlatform.buildRustPackage
+rec
+{
   pname = "nannou_new";
   version = "0.15.0";
 
@@ -10,25 +12,32 @@ pkgs.rustPlatform.buildRustPackage rec {
     hash = "sha256-5uiHluuCdDNbpzKB/nG/Rmp0u3D6269CLxv1Yv69VqQ=";
   };
 
-  # cargoLock = {
-  #   lockFile = ./nannou-cargo.lock;
-  #   outputHashes = {
-  #     "hotglsl-0.1.0" = "sha256-G88Sa/tgGppaxIIPXDqIazMWRBXpaSFb2mulNfCclm8=";
-  #     "isf-0.1.0" = "sha256-utexaXpZZgpRunVAQyD2JAwvabhZGzeorC4pRFIumAc=";
-  #     "skeptic-0.13.4" = "sha256-EZFtWIPfsfbpGBD8NwsVtMzRM10kVdg+djoV00dhT4Y=";
-  #   };
-  # };
+  # this patch deletes anything but nannou_new from the workspace to make it the only crate there
+  # other crates deal with other git based dependencies which makes the whole thing much worse to
+  # package even though we don't even need those dependencies
+  #
+  # if anyone has to do this again: 
+  #
+  # - remove the Cargo.lock from .gitignore if it's still there
+  # - remove all packages but nannou_new from the workspace
+  # - create the lock file by running cargo update
+  # - commit everything
+  # - create the patch by running something like `git diff HEAD~ > nannou_new.patch`
+  # 
+  # even then it didn't work since cargo wanted to update the lock file again
+  # to debug this, look at what's updated by cargo by uncommenting this
+  #
+  # configurePhase = '' 
+  #  cargo update --dry-run -v
+  # ''
+  #
+  # in my case, I just needed to manually bump the version of nannou_new in the patch
+  cargoPatches = [ ./nannou_new.patch ];
 
-  cargoPatches = [
-    ./nannou_new.patch
-  ];
+  cargoHash = "sha256-36qYItOsJEluv2YNiOxZGoBruWnWnx7Ggf2IL9+YYkU=";
 
-  sourceRoot = "${src.name}/nannou_new";
-
-  cargoHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD=";
-
-  nativeBuildInputs = [ ];
-  buildInputs = [ ];
+  nativeBuildInputs = [ pkgs.pkgconfig ];
+  buildInputs = [ pkgs.openssl ];
 
   meta = with pkgs.lib; {
     description = "A simple interactive tool for generating projects.";
