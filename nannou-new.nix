@@ -34,9 +34,6 @@ rec
     #
     # in my case, I just needed to manually bump the version of nannou_new in the patch
     ./nannou_new.patch
-    # the current version of nannou_new needed some update love to work again since some
-    # dependencies are pretty old
-    ./nannou_new_update.patch
   ];
 
   cargoHash = "sha256-36qYItOsJEluv2YNiOxZGoBruWnWnx7Ggf2IL9+YYkU=";
