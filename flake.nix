@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "A basic flake for running nannou for educational purposes.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.05";
@@ -12,7 +12,7 @@
 
   outputs = { self, flake-utils, nixpkgs, ... }@inputs: flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
     in
     {
       devShells = rec {
