@@ -8,7 +8,9 @@ pkgs.mkShell
 rec {
   buildInputs = [
     rust
-    nannou-new
     vscode
+
+    # doesnt work yet, everything is too old and also building taskes ages
+    # nannou-new
   ];
 }
