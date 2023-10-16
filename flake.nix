@@ -16,7 +16,10 @@
     in
     {
       devShells = rec {
-        default = nannou;
+        default = comfy;
+        comfy = import ./comfy.nix { inherit pkgs system inputs; };
+        comfyNew = import ./comfy-new.nix { inherit pkgs comfy; };
+        # todo: work on this once nannou is getting some momentum again
         nannou = import ./nannou.nix { inherit pkgs system inputs; };
       };
     }
