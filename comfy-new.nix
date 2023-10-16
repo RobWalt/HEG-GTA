@@ -35,6 +35,10 @@ pkgs.mkShell
 rec {
   buildInputs = myInputs ++ comfyDeps;
   shellHook = '' 
+    NIXOS_OZONE_WL=1 
+    WLR_NO_HARDWARE_CURSORS=1
+    WAYLAND_DISPLAY=wayland-1
+
     DATE=$(date -u +%Y-%m-%d)
     TMPDIR=$(mktemp -d)
     NAME=$(${pkgs.rust-petname}/bin/petname)
