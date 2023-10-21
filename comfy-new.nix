@@ -3,15 +3,11 @@ let
   rust = import ./fenix.nix { inherit system inputs; };
   vscode = import ./vscode.nix { inherit pkgs; };
 
-  comfy-main = pkgs.writeText "main.rs" '' 
-use comfy::*;
+  mkTemplateFile = name: pkgs.writeText name (builtins.readFile ./comfy/templates/basic/${name});
 
-simple_game!("Nice red circle", update);
-
-fn update(_c: &mut EngineContext) {
-    draw_circle(vec2(0.0, 0.0), 0.5, RED, 0);
-}
-  '';
+  comfy-main = mkTemplateFile "main.rs";
+  comfy-lib = mkTemplateFile "lib.rs";
+  comfy-boilerplate = mkTemplateFile "boilerplate.rs";
 
   myInputs = [ rust vscode ];
   comfyDeps = with pkgs; [
@@ -51,6 +47,9 @@ rec {
     cargo add comfy
     rm src/main.rs
     cat ${comfy-main} > src/main.rs
+    cat ${comfy-lib} > src/lib.rs
+    cat ${comfy-boilerplate} > src/boilerplate.rs
+    echo "use $NAME::*;" | sed "s/-/_/g" >> src/main.rs
     ${vscode}/bin/code .
     exit
   '';
