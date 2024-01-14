@@ -16,7 +16,7 @@
     in
     {
       devShells = rec {
-        default = comfyContinue;
+        default = import ./basic-rust.nix { inherit pkgs system inputs; };
         comfyContinue = import ./comfy-continue.nix { inherit pkgs system inputs; };
         comfyNew = import ./comfy-new.nix { inherit pkgs system inputs; };
         comfyEnv = import ./comfy-env.nix { inherit pkgs system inputs; };
