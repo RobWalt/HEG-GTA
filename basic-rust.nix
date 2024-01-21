@@ -14,7 +14,24 @@ rec {
   ];
   LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
   shellHook = '' 
-    ${vscode}/bin/code ~/
-    exit
+    cd ~
+
+    cargo new http-playground
+
+    cd http-playground
+
+    if [ ! -d ".vscode" ]; then
+      mkdir .vscode
+    fi
+
+    if [ ! -f ".vscode/tasks.json" ]; then
+      echo '${builtins.readFile ./.vscode/tasks.json}' > .vscode/tasks.json
+    fi
+
+    if [ ! -f ".vscode/settings.json" ]; then
+      echo '${builtins.readFile ./.vscode/settings.json}' > .vscode/settings.json
+    fi
+
+    code .
   '';
 }
