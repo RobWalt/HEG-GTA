@@ -1,5 +1,5 @@
 {
-  description = "A basic flake for running nannou for educational purposes.";
+  description = "A basic flake for educational purposes.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.11";
