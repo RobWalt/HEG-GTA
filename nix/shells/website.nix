@@ -16,7 +16,8 @@
       packages = {
         copyGithubWorkflow = pkgs.writeShellScriptBin "git" ''
           cp -rf ${workflow}/.github .
-          chmod -R 777 .github
+          cp ${workflow}/flake.nix .
+          cp ${workflow}/flake.lock .
         '';
         initGit = pkgs.writeShellScriptBin "init-git" ''
           export GIT_AUTHOR_NAME="Nix User"
@@ -26,7 +27,7 @@
 
           ${pkgs.git}/bin/git init 1>/dev/null
           ${pkgs.git}/bin/git add -A 1>/dev/null
-          ${pkgs.git}/bin/git commit -m "Initial Commit" 1>/dev/null
+          ${pkgs.git}/bin/git commit --no-gpg-sign -m "Initial Commit" 1>/dev/null
         '';
         createEmptyZola = pkgs.writeShellScriptBin "zola" ''
           cp -rf ${theme}/* .
