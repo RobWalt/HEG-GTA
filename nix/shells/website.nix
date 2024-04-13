@@ -11,7 +11,7 @@
         ref = "main";
         rev = "296a03144f1e16d6c084282a7aafe21e783e1982";
       };
-      dir = "zola-blank";
+      dir = "zola-website";
     in {
       packages = {
         copyGithubWorkflow = pkgs.writeShellScriptBin "git" ''
@@ -24,34 +24,28 @@
           export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
           export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 
-          ${pkgs.git}/bin/git init
-          ${pkgs.git}/bin/git add -A
-          ${pkgs.git}/bin/git commit -m "Initial Commit"
+          ${pkgs.git}/bin/git init 1>/dev/null
+          ${pkgs.git}/bin/git add -A 1>/dev/null
+          ${pkgs.git}/bin/git commit -m "Initial Commit" 1>/dev/null
         '';
         createEmptyZola = pkgs.writeShellScriptBin "zola" ''
-          mkdir ${dir}
-          cd ${dir}
           cp -rf ${theme}/* .
-          ${pkgs.coreutils}/bin/yes | rm .woodpecker.yaml README.md screenshot.png theme.toml
-          chmod -R 777 .
+          ${pkgs.coreutils}/bin/yes | rm README.md screenshot.png theme.toml
         '';
       };
       devShells.website = pkgs.mkShell {
         packages = [ pkgs.zola ];
         shellHook = ''
+          mkdir ${dir}
+          cd ${dir}
+
           ${self'.packages.createEmptyZola}/bin/zola
           ${self'.packages.copyGithubWorkflow}/bin/git
-
           ${self'.packages.initGit}/bin/init-git
 
-          ${pkgs.tree}/bin/tree
-          ${pkgs.git}/bin/git log
-          ${pkgs.zola}/bin/zola serve
+          chmod -R 777 .
 
-          echo "Cleaning up"
-          cd ..
-          rm -rf ${dir}
-          exit
+          ls -la
         '';
       };
     };
