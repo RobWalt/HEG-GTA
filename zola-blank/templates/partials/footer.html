@@ -1,0 +1,20 @@
+<footer id="site-footer">
+	{% if config.extra.footer.show_copyright %}
+		<p title="Last built at {{ now() | date(format='%F %a %R') }}">&copy; {{ config.title }}, {{ now() | date(format="%Y") }}</p>
+	{% endif %}
+
+	{% if config.extra.footer.show_source %}
+		<p><a href="{{ config.extra.source_url | safe }}">Website source</a></p>
+	{% endif %}
+
+	{% if config.extra.footer.show_powered_by %}
+		<p><small>Powered by <a href="https://www.getzola.org">Zola</a> and <a href="https://daudix.codeberg.page/duckquill">Duckquill</a></small></p>
+	{% endif %}
+
+	{% if config.extra.footer.show_johnvert %}
+		<details>
+			<summary>Johnvertisement</summary>
+			<iframe id="johnvertisement" title="Johnvertisement" src="https://john.citrons.xyz/embed?ref={{ config.extra.footer.johnvert_ref }}"></iframe>
+		</details>
+	{% endif %}
+</footer>

@@ -1,0 +1,35 @@
+name: Github Pages Release
+run-name: ${{ github.actor }} released a new version of the website
+
+on: 
+ push:
+  branches:
+   - main
+
+permissions: write-all
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        name: Checkout main
+      - uses: cachix/install-nix-action@v24
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Build website and recreate docs pages
+        run: nix run
+      # - name: Delete branch old gh-pages
+      #   uses: dawidd6/action-delete-branch@v3
+      #   with:
+      #     github_token: ${{github.token}}
+      #     branches: gh-pages
+      #     soft_fail: true
+      - name: Commit the changes to new gh-pages
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Deploy Action Bot
+          author_email: deploy@github-action.bot
+          message: 'recreate website'
+          push: 'origin gh-pages --set-upstream --force'
+          new_branch: gh-pages
