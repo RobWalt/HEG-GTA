@@ -1,5 +1,6 @@
 {
-  perSystem = { self', pkgs, ... }:
+  perSystem =
+    { self', pkgs, ... }:
     let
       workflow = builtins.fetchGit {
         url = "https://github.com/DinEau/DinEau.github.io";
@@ -12,8 +13,13 @@
         rev = "296a03144f1e16d6c084282a7aafe21e783e1982";
       };
       dir = "zola-website";
-    in {
+    in
+    {
       packages = {
+        createEmptyZola = pkgs.writeShellScriptBin "zola" ''
+          cp -rf ${theme}/* .
+          ${pkgs.coreutils}/bin/yes | rm README.md screenshot.png theme.toml
+        '';
         copyGithubWorkflow = pkgs.writeShellScriptBin "git" ''
           cp -rf ${workflow}/.github .
           cp ${workflow}/flake.nix .
@@ -25,17 +31,20 @@
           export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
           export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 
+          ${pkgs.git}/bin/git config --local user.name $GIT_AUTHOR_NAME
+          ${pkgs.git}/bin/git config --local user.email $GIT_AUTHOR_EMAIL
+
           ${pkgs.git}/bin/git init 1>/dev/null
           ${pkgs.git}/bin/git add -A 1>/dev/null
           ${pkgs.git}/bin/git commit --no-gpg-sign -m "Initial Commit" 1>/dev/null
         '';
-        createEmptyZola = pkgs.writeShellScriptBin "zola" ''
-          cp -rf ${theme}/* .
-          ${pkgs.coreutils}/bin/yes | rm README.md screenshot.png theme.toml
-        '';
       };
       devShells.website = pkgs.mkShell {
-        packages = [ pkgs.zola ];
+        packages = [
+          pkgs.zola
+          pkgs.git
+          pkgs.gittyup
+        ];
         shellHook = ''
           mkdir ${dir}
           cd ${dir}
