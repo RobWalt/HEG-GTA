@@ -17,8 +17,14 @@
 
   outputs =
     inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = inputs.flake-utils.lib.defaultSystems;
-      imports = [ ./nix ];
-    };
+    flake-parts.lib.mkFlake
+      {
+        inputs = inputs // {
+          flake-lib = import ./lib.nix;
+        };
+      }
+      {
+        systems = inputs.flake-utils.lib.defaultSystems;
+        imports = [ ./nix ];
+      };
 }

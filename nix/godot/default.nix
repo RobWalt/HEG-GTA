@@ -3,6 +3,7 @@
   perSystem =
     { pkgs, ... }:
     {
+      packages.maker = { name }: pkgs.mkShell { inherit name; };
 
       devShells.godot-snake =
         let
@@ -13,16 +14,13 @@
             sha256 = "sha256-5KFYf3nZLOMeAWYC4nXIzJmJB69myONZpa+oYuN6PvE=";
           };
         in
-        pkgs.mkShell {
+        inputs.flake-lib.mkShell {
+          inherit pkgs;
           name = "godot-snake";
           packages = [ pkgs.godot_4 ];
           shellHook = ''
-            mkdir -p ~/godot-snake
-            pushd ~/godot-snake
             cp -rf ${repo}/assets .
             godot4
-            popd
-            exit
           '';
         };
 

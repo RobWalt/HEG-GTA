@@ -20,17 +20,14 @@
           ijuliaRev = "bHdNn";
         };
       });
-      devShells.julia-jupyter = pkgs.mkShell {
+      devShells.julia-jupyter = inputs.flake-lib.mkShell {
+        inherit pkgs;
         name = "julia-jupyter";
         packages = [ self'.packages.julia-jupyter ];
         shellHook = ''
-          mkdir -p ~/julia-jupyter
-          pushd ~/julia-jupyter
           ${self'.packages.julia-jupyter}/bin/julia -e "using Pkg; Pkg.add(\"IJulia\")"
           ls ~/.julia/packages/IJulia
           ${lib.getExe self'.packages.julia-jupyter}
-          popd
-          exit
         '';
       };
 
