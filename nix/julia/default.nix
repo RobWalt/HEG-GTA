@@ -1,7 +1,13 @@
 { inputs, ... }:
 {
   perSystem =
-    { pkgs, system, ... }:
+    {
+      self',
+      pkgs,
+      lib,
+      system,
+      ...
+    }:
     let
       inherit (inputs.jupyenv.lib.${system}) mkJupyterlabNew;
     in
@@ -14,6 +20,18 @@
           ijuliaRev = "bHdNn";
         };
       });
+      devShells.julia-jupyter = pkgs.mkShell {
+        name = "julia-jupyter";
+        packages = [ self'.packages.julia-jupyter ];
+        shellHook = ''
+          mkdir -p ~/julia-jupyter
+          cd ~/julia-jupyter
+          ${self'.packages.julia-jupyter}/bin/julia -e "using Pkg; Pkg.add(\"IJulia\")"
+          ls ~/.julia/packages/IJulia
+          ${lib.getExe self'.packages.julia-jupyter}
+          exit
+        '';
+      };
 
     };
 }

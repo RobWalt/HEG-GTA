@@ -1,1 +1,6 @@
-{ imports = [ ./julia ]; }
+{
+  imports = [
+    ./julia
+    ./godot
+  ];
+}
