@@ -18,9 +18,10 @@
           packages = [ pkgs.godot_4 ];
           shellHook = ''
             mkdir -p ~/godot-snake
-            cd ~/godot-snake
+            pushd ~/godot-snake
             cp -rf ${repo}/assets .
             godot4
+            popd
             exit
           '';
         };
