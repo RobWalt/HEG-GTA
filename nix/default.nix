@@ -1,6 +1,1 @@
-{
-  imports = [
-    ./packages
-    ./shells
-  ];
-}
+{ imports = [ ./julia ]; }

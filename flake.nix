@@ -12,17 +12,13 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    jupyenv.url = "github:tweag/jupyenv";
   };
 
-  outputs = inputs @ { flake-parts, ... }:
-    flake-parts.lib.mkFlake
-      {
-        inherit inputs;
-      }
-      {
-        systems = inputs.flake-utils.lib.defaultSystems;
-        imports = [
-          ./nix
-        ];
-      };
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = inputs.flake-utils.lib.defaultSystems;
+      imports = [ ./nix ];
+    };
 }
