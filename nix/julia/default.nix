@@ -25,7 +25,7 @@
         name = "julia-jupyter";
         packages = [ self'.packages.julia-jupyter ];
         shellHook = ''
-          ${self'.packages.julia-jupyter}/bin/julia -e "using Pkg; Pkg.add(\"IJulia\")"
+          ${self'.packages.julia-jupyter}/bin/julia -e "using Pkg; Pkg.add(\"IJulia\"); Pkg.add(\"Plots\")"
           ls ~/.julia/packages/IJulia
           ${lib.getExe self'.packages.julia-jupyter}
         '';
